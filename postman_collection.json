@@ -5,16 +5,8 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "userId",
-      "value": "1",
-      "type": "string"
-    }
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "userId", "value": "1", "type": "string" }
   ],
   "item": [
     {
@@ -22,51 +14,53 @@
       "item": [
         {
           "name": "Health Check",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/health",
-            "description": "Vérifie que le serveur est opérationnel"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('status ok', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.status).to.eql('ok');",
-                  "  pm.expect(body.versions.current).to.eql('v2');",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/health" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('status ok', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.status).to.eql('ok');",
+            "  pm.expect(body.versions.current).to.eql('v2');",
+            "});"
+          ]}}]
         },
         {
           "name": "API Info",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api",
-            "description": "Informations générales sur l'API et ses versions"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Contient v1 et v2', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.versions).to.have.property('v1');",
-                  "  pm.expect(body.versions).to.have.property('v2');",
-                  "  pm.expect(body.versions.v1.status).to.eql('deprecated');",
-                  "  pm.expect(body.versions.v2.status).to.eql('current');",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/api" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Contient v1 et v2', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.versions).to.have.property('v1');",
+            "  pm.expect(body.versions).to.have.property('v2');",
+            "  pm.expect(body.versions.v1.status).to.eql('deprecated');",
+            "  pm.expect(body.versions.v2.status).to.eql('current');",
+            "});"
+          ]}}]
+        },
+        {
+          "name": "API v1 Root",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Version v1 info', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.version).to.eql('v1');",
+            "  pm.expect(body.status).to.eql('deprecated');",
+            "});"
+          ]}}]
+        },
+        {
+          "name": "API v2 Root",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v2" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Version v2 info', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.version).to.eql('v2');",
+            "  pm.expect(body.status).to.eql('current');",
+            "});"
+          ]}}]
         }
       ]
     },
@@ -75,70 +69,39 @@
       "item": [
         {
           "name": "GET tous les utilisateurs",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/v1/users",
-            "description": "Retourne la liste complète — format français avec champ 'données'"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Format v1 correct', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body).to.have.property('données');",
-                  "  pm.expect(body).to.have.property('compte');",
-                  "  pm.expect(body.succès).to.be.true;",
-                  "});",
-                  "pm.test('Header dépréciation présent', () => {",
-                  "  pm.expect(pm.response.headers.get('Deprecation')).to.exist;",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Format v1 correct', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body).to.have.property('data');",
+            "  pm.expect(body).to.have.property('count');",
+            "  pm.expect(body.success).to.be.true;",
+            "});",
+            "pm.test('Header dépréciation présent', () => {",
+            "  pm.expect(pm.response.headers.get('Deprecation')).to.exist;",
+            "});"
+          ]}}]
         },
         {
           "name": "GET utilisateur par ID",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/v1/users/{{userId}}",
-            "description": "Retourne un utilisateur par son ID"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Utilisateur retourné', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.données).to.have.property('id');",
-                  "  pm.expect(body.données).to.have.property('nom');",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/{{userId}}" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Utilisateur retourné', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.data).to.have.property('id');",
+            "  pm.expect(body.data).to.have.property('name');",
+            "  pm.expect(body.success).to.be.true;",
+            "});"
+          ]}}]
         },
         {
           "name": "GET utilisateur inexistant (404)",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/v1/users/9999"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 404', () => pm.response.to.have.status(404));"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/users/9999" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 404', () => pm.response.to.have.status(404));"
+          ]}}]
         },
         {
           "name": "POST créer un utilisateur",
@@ -146,26 +109,17 @@
             "method": "POST",
             "url": "{{baseUrl}}/api/v1/users",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nom\": \"Marie Curie\",\n  \"email\": \"marie@example.com\",\n  \"âge\": 45,\n  \"rôle\": \"utilisateur\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Marie Curie\",\n  \"email\": \"marie@example.com\",\n  \"age\": 45,\n  \"role\": \"user\"\n}" }
           },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
-                  "pm.test('Utilisateur créé avec ID', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.données).to.have.property('id');",
-                  "  pm.environment.set('newUserIdV1', body.données.id);",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 201', () => pm.response.to.have.status(201));",
+            "pm.test('Utilisateur créé avec ID', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.data).to.have.property('id');",
+            "  pm.expect(body.data).to.have.property('name');",
+            "  pm.environment.set('newUserIdV1', body.data.id);",
+            "});"
+          ]}}]
         },
         {
           "name": "PUT mettre à jour un utilisateur",
@@ -173,42 +127,23 @@
             "method": "PUT",
             "url": "{{baseUrl}}/api/v1/users/{{userId}}",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nom\": \"Alice Dupont Modifiée\",\n  \"email\": \"alice@example.com\",\n  \"âge\": 31,\n  \"rôle\": \"admin\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Alice Dupont Modifiée\",\n  \"email\": \"alice@example.com\",\n  \"age\": 31,\n  \"role\": \"admin\"\n}" }
           },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Nom mis à jour', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.données.nom).to.eql('Alice Dupont Modifiée');",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Nom mis à jour', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.data.name).to.eql('Alice Dupont Modifiée');",
+            "  pm.expect(body.success).to.be.true;",
+            "});"
+          ]}}]
         },
         {
           "name": "DELETE supprimer un utilisateur",
-          "request": {
-            "method": "DELETE",
-            "url": "{{baseUrl}}/api/v1/users/{{newUserIdV1}}"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v1/users/{{newUserIdV1}}" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));"
+          ]}}]
         }
       ]
     },
@@ -227,74 +162,47 @@
                 { "key": "page", "value": "1" },
                 { "key": "limit", "value": "10" }
               ]
-            },
-            "description": "Format enrichi avec meta pagination"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Format v2 avec meta', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body).to.have.property('data');",
-                  "  pm.expect(body).to.have.property('meta');",
-                  "  pm.expect(body.meta).to.have.property('total');",
-                  "  pm.expect(body.meta).to.have.property('page');",
-                  "  pm.expect(body.meta).to.have.property('limit');",
-                  "  pm.expect(body.meta).to.have.property('pages');",
-                  "});",
-                  "pm.test('Champs enrichis présents', () => {",
-                  "  const user = pm.response.json().data[0];",
-                  "  pm.expect(user).to.have.property('firstName');",
-                  "  pm.expect(user).to.have.property('lastName');",
-                  "  pm.expect(user).to.have.property('createdAt');",
-                  "  pm.expect(user).to.have.property('updatedAt');",
-                  "});"
-                ]
-              }
             }
-          ]
+          },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Format v2 avec meta', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body).to.have.property('data');",
+            "  pm.expect(body).to.have.property('meta');",
+            "  pm.expect(body.meta).to.have.property('total');",
+            "  pm.expect(body.meta).to.have.property('page');",
+            "  pm.expect(body.meta).to.have.property('limit');",
+            "  pm.expect(body.meta).to.have.property('pages');",
+            "});",
+            "pm.test('Champs enrichis présents', () => {",
+            "  const user = pm.response.json().data[0];",
+            "  pm.expect(user).to.have.property('firstName');",
+            "  pm.expect(user).to.have.property('lastName');",
+            "  pm.expect(user).to.have.property('createdAt');",
+            "  pm.expect(user).to.have.property('updatedAt');",
+            "});"
+          ]}}]
         },
         {
           "name": "GET utilisateur par ID",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/v2/users/{{userId}}"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Format enrichi', () => {",
-                  "  const user = pm.response.json().data;",
-                  "  pm.expect(user).to.have.property('firstName');",
-                  "  pm.expect(user).to.have.property('createdAt');",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v2/users/{{userId}}" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Format enrichi', () => {",
+            "  const user = pm.response.json().data;",
+            "  pm.expect(user).to.have.property('firstName');",
+            "  pm.expect(user).to.have.property('lastName');",
+            "  pm.expect(user).to.have.property('createdAt');",
+            "});"
+          ]}}]
         },
         {
           "name": "GET utilisateur inexistant (404)",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/v2/users/9999"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 404', () => pm.response.to.have.status(404));"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/v2/users/9999" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 404', () => pm.response.to.have.status(404));"
+          ]}}]
         },
         {
           "name": "POST créer un utilisateur",
@@ -302,27 +210,18 @@
             "method": "POST",
             "url": "{{baseUrl}}/api/v2/users",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Dupont\",\n  \"email\": \"jean.dupont@example.com\",\n  \"age\": 28,\n  \"role\": \"user\"\n}"
-            }
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Dupont\",\n  \"email\": \"jean.dupont@example.com\",\n  \"age\": 28,\n  \"role\": \"user\"\n}" }
           },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
-                  "pm.test('Timestamps générés', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.data).to.have.property('createdAt');",
-                  "  pm.expect(body.data).to.have.property('updatedAt');",
-                  "  pm.environment.set('newUserIdV2', body.data.id);",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 201', () => pm.response.to.have.status(201));",
+            "pm.test('Timestamps générés', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.data).to.have.property('createdAt');",
+            "  pm.expect(body.data).to.have.property('updatedAt');",
+            "  pm.expect(body.data.firstName).to.eql('Jean');",
+            "  pm.environment.set('newUserIdV2', body.data.id);",
+            "});"
+          ]}}]
         },
         {
           "name": "PATCH mise à jour partielle",
@@ -330,44 +229,25 @@
             "method": "PATCH",
             "url": "{{baseUrl}}/api/v2/users/{{userId}}",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"age\": 35\n}"
-            },
-            "description": "Seul le champ 'age' est modifié — les autres restent inchangés"
+            "body": { "mode": "raw", "raw": "{\n  \"age\": 35\n}" }
           },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Age mis à jour', () => {",
-                  "  const body = pm.response.json();",
-                  "  pm.expect(body.data.age).to.eql(35);",
-                  "  pm.expect(body.data).to.have.property('updatedAt');",
-                  "});"
-                ]
-              }
-            }
-          ]
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Age mis à jour', () => {",
+            "  const body = pm.response.json();",
+            "  pm.expect(body.data.age).to.eql(35);",
+            "  pm.expect(body.data).to.have.property('updatedAt');",
+            "});"
+          ]}}]
         },
         {
           "name": "DELETE supprimer un utilisateur",
-          "request": {
-            "method": "DELETE",
-            "url": "{{baseUrl}}/api/v2/users/{{newUserIdV2}}"
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/v2/users/{{newUserIdV2}}" },
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 204 ou 200', () => {",
+            "  pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+            "});"
+          ]}}]
         }
       ]
     }
