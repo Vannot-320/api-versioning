@@ -161,7 +161,7 @@ curl http://localhost:3000/api
 
 ### API v1 — Dépréciée
 
-> ⚠️ La v1 est dépréciée depuis le 31/12/2025. Migrer vers v2.
+> La v1 est dépréciée depuis le 31/12/2025. Migrer vers v2.
 
 | Méthode | Route | Description |
 |---------|-------|-------------|
